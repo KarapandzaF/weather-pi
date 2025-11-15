@@ -1,0 +1,285 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firebase RTDB Demo</title>
+  <style>
+    body {
+      background: #f6f8fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      margin-top: 2.5rem;
+      color: #333;
+      letter-spacing: 2px;
+      font-size: 1.6rem;
+    }
+    .info-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 400px;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .info-box {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 1.5rem 1.2rem;
+      min-width: 0;
+      min-height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #222;
+      font-weight: 500;
+      transition: box-shadow 0.2s;
+      width: 100%;
+    }
+    .info-box:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+    }
+    @media (min-width: 600px) {
+      .info-container {
+        flex-direction: row;
+        max-width: 900px;
+        gap: 1.5rem;
+      }
+      .info-box {
+        min-width: 180px;
+        font-size: 1.3rem;
+        padding: 2rem 2.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PiSense Web App</h1>
+  <div class="info-container">
+    <div class="info-box"><pre id="db-temp" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-hum" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-pres" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-gas" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getDatabase,ref,onValue} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBJK_4JMAMeRi7sEM4lvxSWzfLZMG4Kt3k",
+      authDomain: "pisense-84732.firebaseapp.com",
+      databaseURL: "https://pisense-84732-default-rtdb.firebaseio.com",
+      projectId: "pisense-84732",
+      storageBucket: "pisense-84732.firebasestorage.app",
+      messagingSenderId: "573459104833",
+     appId: "1:573459104833:web:800a4b56c2780f5b14b2c0",
+      measurementId: "G-TY2VV6PD4B"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+
+
+   let temp = ref(db, 'environment/DHT11/Temp')
+    onValue(temp, (snapshot) => {
+      const tempdat = snapshot.val();
+      document.getElementById('db-temp').textContent = "Temperature: " + tempdat;
+    });
+
+    let hum = ref(db, 'environment/DHT11/Humidity');
+    onValue(hum, (snapshot) => {
+      const humdata = snapshot.val();
+      document.getElementById('db-hum').textContent = "Humidity: " + humdata;
+    });
+
+
+    let gas = ref(db, 'environment/Gas');
+    onValue(gas, (snapshot) => {
+      const gasdata = snapshot.val();
+      const gasElem = document.getElementById('db-gas');
+      if (gasdata == 0) {
+        gasElem.textContent = "Gas: Not Detected";
+        gasElem.style.color = "green";
+      }
+      else {
+        gasElem.textContent = "Gas: Detected";
+        gasElem.style.color = "red";
+      }
+    });
+
+
+    let pres = ref(db, 'environment/Presence');
+    onValue(pres, (snapshot) => {
+      const presdata = snapshot.val();
+      const presElem = document.getElementById('db-pres');
+      if (presdata == 0) {
+        presElem.textContent = "Presence: Not Detected";
+        presElem.style.color = "green";
+      }
+      else {
+        presElem.textContent = "Presence: Detected";
+        presElem.style.color = "red";
+      }
+    })
+
+  </script>
+</body>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firebase RTDB Demo</title>
+  <style>
+    body {
+      background: #f6f8fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      margin-top: 2.5rem;
+      color: #333;
+      letter-spacing: 2px;
+      font-size: 1.6rem;
+    }
+    .info-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 400px;
+      justify-content: center;
+      align-items: stretch;
+    }
+    .info-box {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 1.5rem 1.2rem;
+      min-width: 0;
+      min-height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: #222;
+      font-weight: 500;
+      transition: box-shadow 0.2s;
+      width: 100%;
+    }
+    .info-box:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+    }
+    @media (min-width: 600px) {
+      .info-container {
+        flex-direction: row;
+        max-width: 900px;
+        gap: 1.5rem;
+      }
+      .info-box {
+        min-width: 180px;
+        font-size: 1.3rem;
+        padding: 2rem 2.5rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PiSense Web App</h1>
+  <div class="info-container">
+    <div class="info-box"><pre id="db-temp" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-hum" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-pres" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+    <div class="info-box"><pre id="db-gas" style="margin:0;background:none;border:none;padding:0;font-family:inherit;font-size:inherit;"></pre></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getDatabase,ref,onValue} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBJK_4JMAMeRi7sEM4lvxSWzfLZMG4Kt3k",
+      authDomain: "pisense-84732.firebaseapp.com",
+      databaseURL: "https://pisense-84732-default-rtdb.firebaseio.com",
+      projectId: "pisense-84732",
+      storageBucket: "pisense-84732.firebasestorage.app",
+      messagingSenderId: "573459104833",
+     appId: "1:573459104833:web:800a4b56c2780f5b14b2c0",
+      measurementId: "G-TY2VV6PD4B"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+
+
+
+   let temp = ref(db, 'environment/DHT11/Temp')
+    onValue(temp, (snapshot) => {
+      const tempdat = snapshot.val();
+      document.getElementById('db-temp').textContent = "Temperature: " + tempdat;
+    });
+
+    let hum = ref(db, 'environment/DHT11/Humidity');
+    onValue(hum, (snapshot) => {
+      const humdata = snapshot.val();
+      document.getElementById('db-hum').textContent = "Humidity: " + humdata;
+    });
+
+
+    let gas = ref(db, 'environment/Gas');
+    onValue(gas, (snapshot) => {
+      const gasdata = snapshot.val();
+      const gasElem = document.getElementById('db-gas');
+      if (gasdata == 0) {
+        gasElem.textContent = "Gas: Not Detected";
+        gasElem.style.color = "green";
+      }
+      else {
+        gasElem.textContent = "Gas: Detected";
+        gasElem.style.color = "red";
+      }
+    });
+
+
+    let pres = ref(db, 'environment/Presence');
+    onValue(pres, (snapshot) => {
+      const presdata = snapshot.val();
+      const presElem = document.getElementById('db-pres');
+      if (presdata == 0) {
+        presElem.textContent = "Presence: Not Detected";
+        presElem.style.color = "green";
+      }
+      else {
+        presElem.textContent = "Presence: Detected";
+        presElem.style.color = "red";
+      }
+    })
+
+  </script>
+</body>
+
+
